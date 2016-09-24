@@ -28,8 +28,6 @@ namespace Larry.BoxHound
         // The reference of the weapon manager.
         private WeaponManager m_WeaponManager = null;
         private CharacterControl m_CharacterControl = null;
-
-        private PhotonView m_WeaponPhotonView;
         #endregion
 
         // This is for not only the local player but all the player object in scene.
@@ -37,16 +35,18 @@ namespace Larry.BoxHound
         // other player's game object will not initalize by the RoomManager because 
         // they are not the loacl player, so these game object only initalize in here.
         public void Start() {
+
             if (!m_WeaponManager)
                 m_WeaponManager = GetComponent<WeaponManager>();
 
             if (!m_CharacterControl)
                 m_CharacterControl = GetComponent<CharacterControl>();
 
+            // Hide the player model and disable its contol for now until the game started.
+            HideCharacter(false);
+
             // Disable the character's main character.
             EnableMainCamera(false);
-
-            m_WeaponPhotonView = PhotonView.Get(this);
         }
 
         /// <summary>
@@ -61,6 +61,9 @@ namespace Larry.BoxHound
 
                 // Change the name of the object so makes easier for debugging.
                 this.gameObject.name = "Local player";
+
+                // Change the tag to localPlayer as it won't be taged as "Target" and receive damage from itself.
+                this.gameObject.tag = "LocalPlayer";
 
                 // We flag as don't destroy on load so that instance survives level synchronization, 
                 // thus giving a seamless experience when levels load.

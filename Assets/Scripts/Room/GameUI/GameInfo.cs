@@ -36,7 +36,6 @@ namespace Larry.BoxHound
         }
 
         public void ShowUI(bool show) {
-            Debug.Log(show + " Show the game info UI");
             this.gameObject.SetActive(show);
             m_Health.gameObject.SetActive(show);
             m_AmmoCount.gameObject.SetActive(show);

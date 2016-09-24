@@ -160,8 +160,6 @@ namespace Larry.BoxHound
                 // If the local player instance has not been instantiated yet.
                 if (LocalPlayer == null)
                 {
-                    Debug.Log("Init Local Player");
-
                     // Now we're in a room. spawn a character for the local player. 
                     // It gets synced by using PhotonNetwork.Instantiate
                     GameObject loaclPlayer = PhotonNetwork.Instantiate(this.PlayerPrefab.name, new Vector3(0f, 20f, 0f), Quaternion.identity, 0);
