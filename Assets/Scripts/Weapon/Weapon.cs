@@ -2,7 +2,7 @@
 using System.Collections;
 namespace Larry.BoxHound
 {
-    public abstract class Weapon : MonoBehaviour
+    public abstract class Weapon : Photon.PunBehaviour
     {
         // All weapon types
         public enum Type {
@@ -41,6 +41,8 @@ namespace Larry.BoxHound
             public float BulletDistance = 150.0f;
             // How "Hard" the bullet will hit on rigidBodies, default value is 15.0f.
             public float BulletForce = 15f;
+            // How much damage will do when hits on target.
+            public int DamagePerShot = 12;
         }
 
         [System.Serializable]
@@ -196,36 +198,13 @@ namespace Larry.BoxHound
         #endregion
 
         #region Private methods.
+        /// <summary>
+        /// The muzzle flash animation, 
+        /// including the muzzle flash sprite and flash lighting.
+        /// </summary>
+        /// <returns></returns>
         protected IEnumerator MuzzleFlash()
         {
-            // Raycast bullet
-            RaycastHit hit;
-            // Shoot a ray directly form the gun model.
-            Ray ray = new Ray(transform.position, transform.forward);
-
-            #region Raycast bullet from bullet spawn point.
-            //Send out the raycast from the "bulletSpawnPoint" position
-            if (Physics.Raycast(m_SpawnPoint.BulletSpawnPoint.position,
-                m_SpawnPoint.BulletSpawnPoint.forward, out hit))
-            {
-
-                // If a rigibody is hit, add bullet force to it.
-                if (hit.rigidbody != null)
-                {
-                    hit.rigidbody.AddForce(ray.direction * m_WeaponData.BulletForce);
-                }
-
-                // If the raycast hit the tag "Target"
-                if (hit.transform.tag == "Target")
-                {
-                    Instantiate(m_ImpactsAndTags.MetalImpactPrefab, hit.point,
-                        Quaternion.FromToRotation(Vector3.forward, hit.normal));
-                }
-
-                BulletHitOnObject(hit);
-            }
-            #endregion
-
             #region Show the muzzle flash            
             if (true) {
                 // Chooses a random muzzleflash sprite from the array
@@ -254,7 +233,10 @@ namespace Larry.BoxHound
             #endregion
         }
 
-        private void BulletHitOnObject(RaycastHit hit) {
+        private void HitOnTarget() {
+        }
+
+        protected void BulletHitOnObject(RaycastHit hit) {
             #region Hit on metal
             // If the raycast hit the tag "Metal (Static)"
             if (hit.transform.tag == BulletImpacts.MetalImpactStaticTag)
@@ -341,7 +323,6 @@ namespace Larry.BoxHound
             }
             #endregion
         }
-
         #endregion
     }
 }

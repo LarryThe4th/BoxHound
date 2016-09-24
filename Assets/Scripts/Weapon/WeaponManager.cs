@@ -71,8 +71,6 @@ namespace Larry.BoxHound
             // If the weapon is non-usable or this object is not controlled by local player,
             // don't do anything.
             if (!m_IsWeaponUsable || !photonView.isMine) return;
-
-            // Process the current using weapon.
             m_WeaponList[m_CurrentUsingWeaponIndex].Process();
         }
         #endregion
