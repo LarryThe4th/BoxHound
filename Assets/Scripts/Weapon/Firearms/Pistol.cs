@@ -93,11 +93,17 @@ namespace Larry.BoxHound
         //For the handgun animation
         private bool m_HasPlayedOutOfAmmoAnimation = false;
         private bool m_SliderLockbacked = false;
+
+        // Ignore "Player" collision
+        LayerMask m_layerMask;
         #endregion
+
+
 
         public override void Init(PhotonView managerView)
         {
             base.Init(managerView);
+            m_layerMask = ~(1 << LayerMask.NameToLayer("Player"));
         }
 
         public override void Process()
@@ -111,9 +117,12 @@ namespace Larry.BoxHound
                 photonView.RPC("WeaponFireAnimation", PhotonTargets.All);
 
                 // Cast a ray as the bullet.
-                photonView.RPC("RayCastBullet", PhotonTargets.All, 
-                    m_SpawnPoint.BulletSpawnPoint.position, 
-                    m_SpawnPoint.BulletSpawnPoint.forward);
+                photonView.RPC("RayCastBullet", PhotonTargets.All,
+                    RoomManager.LocalPlayer.GetMainCameraTransform.position,
+                    RoomManager.LocalPlayer.GetMainCameraTransform.forward);
+                //photonView.RPC("RayCastBullet", PhotonTargets.All, 
+                //    m_SpawnPoint.BulletSpawnPoint.position, 
+                //    m_SpawnPoint.BulletSpawnPoint.forward);
 
                 // Reduce one round form the magazine/clip after shooting and
                 // update the local client's UI.
@@ -174,6 +183,7 @@ namespace Larry.BoxHound
                             m_SpawnPoint.CasingSpawnPoint.rotation);
         }
 
+
         /// <summary>
         /// Cast a ray form the gun as the bullet and detecte if it hits anything. 
         /// </summary>
@@ -187,20 +197,16 @@ namespace Larry.BoxHound
 
             #region Raycast bullet from bullet spawn point.
             //Send out the raycast from the "bulletSpawnPoint" position
-            if (Physics.Raycast(startLocation, direction, out hit))
+            if (Physics.Raycast(startLocation, direction, out hit, m_WeaponData.BulletDistance, m_layerMask))
             {
-
-                // If a rigibody is hit, add bullet force to it.
-                //if (hit.rigidbody != null)
-                //{
-                //    hit.rigidbody.AddForce(ray.direction * m_WeaponData.BulletForce);
-                //}
-
                 // If the raycast hit gameObject the taged as "Target"
                 if (hit.transform.tag == "Target")
                 {
-                    //Instantiate(m_ImpactsAndTags.MetalImpactPrefab, hit.point,
-                    //    Quaternion.FromToRotation(Vector3.forward, hit.normal));
+                    hit.transform.GetComponent<DamageHandler>().TakeDamage(m_WeaponData.DamagePerShot);
+
+                    // Spawn bullet impact on surface
+                    Instantiate(m_ImpactsAndTags.WoodImpactPrefab, hit.point,
+                            Quaternion.FromToRotation(Vector3.forward, hit.normal));
                 }
 
                 // Visualize the hit result by detecting what kinds of target did the bullet hits.

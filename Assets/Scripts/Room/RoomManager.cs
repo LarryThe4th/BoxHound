@@ -162,7 +162,7 @@ namespace Larry.BoxHound
                 {
                     // Now we're in a room. spawn a character for the local player. 
                     // It gets synced by using PhotonNetwork.Instantiate
-                    GameObject loaclPlayer = PhotonNetwork.Instantiate(this.PlayerPrefab.name, new Vector3(0f, 20f, 0f), Quaternion.identity, 0);
+                    GameObject loaclPlayer = PhotonNetwork.Instantiate(this.PlayerPrefab.name, new Vector3(0f, -10f, 0f), Quaternion.identity, 0);
 
                     // Set LocalPlayerInstance.
                     LocalPlayer = loaclPlayer.GetComponent<CharacterManager>();
