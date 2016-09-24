@@ -9,6 +9,9 @@ namespace Larry.BoxHound
         // -------------- Public variable -------------
         public GameModeManager.Team AtTeam
             { get; private set; }
+
+        public CharacterControl m_Control;
+        public CharacterController m_Controller;
         #endregion
 
         #region Private variables
@@ -30,12 +33,15 @@ namespace Larry.BoxHound
         private CharacterControl m_CharacterControl = null;
         #endregion
 
+        public Transform GetMainCameraTransform {
+            get { return CharacterMainCamera.transform; } 
+        }
+
         // This is for not only the local player but all the player object in scene.
         // When a local player join a room which is already some other players in it,
         // other player's game object will not initalize by the RoomManager because 
         // they are not the loacl player, so these game object only initalize in here.
         public void Start() {
-
             if (!m_WeaponManager)
                 m_WeaponManager = GetComponent<WeaponManager>();
 
@@ -43,16 +49,30 @@ namespace Larry.BoxHound
                 m_CharacterControl = GetComponent<CharacterControl>();
 
             // Hide the player model and disable its contol for now until the game started.
-            HideCharacter(false);
+            if (photonView.isMine)
+            {
+                HideCharacter(true);
+            }
+            else {
+                // We don't need any character control on a remote character object.
+                // The PhotonView will synchronize its position and rotation.
+                if (!m_Control) m_Control = GetComponent<CharacterControl>();
+                m_Control.enabled = false;
+                if (!m_Controller) m_Controller = GetComponent<CharacterController>();
+                m_Controller.enabled = false;
+            }
 
             // Disable the character's main character.
             EnableMainCamera(false);
         }
 
         /// <summary>
-        /// These initizaltion will happen after the player object been Instantiated.
+        /// These initizaltion will happen after the player object been Instantiated and befer the character object's own Start();
         /// </summary>
         public void Init() {
+            if (!m_Control) m_Control = GetComponent<CharacterControl>();
+            if (!m_Controller) m_Controller = GetComponent<CharacterController>();
+
             // Used in Room manager we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
             if (photonView.isMine)
             {
@@ -65,15 +85,21 @@ namespace Larry.BoxHound
                 // Change the tag to localPlayer as it won't be taged as "Target" and receive damage from itself.
                 this.gameObject.tag = "LocalPlayer";
 
+                this.gameObject.layer = LayerMask.NameToLayer("Player");
+
+                // Enable the character contorl
+                m_Control.enabled = true;
+                m_Controller.enabled = true;
+
+                AtTeam = GameModeManager.GetTeam((int)PhotonNetwork.player.customProperties[PlayerProperties.Team]);
+
+                // Hide the player model and disable its contol for now until the game started.
+                HideCharacter(true);
+
                 // We flag as don't destroy on load so that instance survives level synchronization, 
                 // thus giving a seamless experience when levels load.
                 DontDestroyOnLoad(this);
             }
-
-            AtTeam = GameModeManager.GetTeam((int)PhotonNetwork.player.customProperties[PlayerProperties.Team]);
-
-            // Hide the player model and disable its contol for now until the game started.
-            HideCharacter(true);
         }
 
         public void EnableCharacterControl(bool enable) {
@@ -91,7 +117,6 @@ namespace Larry.BoxHound
             this.gameObject.transform.rotation = respwanLocation.rotation;
 
             EnableMainCamera(true);
-            HideCharacter(false);
             EnableCharacterControl(true);
 
             m_WeaponManager.EnableWeapon(true);
@@ -116,6 +141,7 @@ namespace Larry.BoxHound
         /// </summary>
         /// <param name="hide"></param>
         public void HideCharacter(bool hide) {
+            Debug.Log("Hide player" + hide);
             PlayerModel.SetActive(!hide);
         }
     }

@@ -22,6 +22,7 @@ namespace Larry.BoxHound
             photonView.RPC("SyncDamage", PhotonTargets.Others, damage);
         }
 
+        [PunRPC]
         private void SyncDamage(int damage) {
             // Reduce current health points.
             m_CurrentHealthPoints = m_CurrentHealthPoints - damage;

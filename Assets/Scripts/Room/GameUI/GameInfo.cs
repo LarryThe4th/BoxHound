@@ -44,7 +44,7 @@ namespace Larry.BoxHound
 
         public void OnHealthUpdate(int maximunHealth, int currentHealthPoint) {
             HealthPoints.text = currentHealthPoint.ToString();
-            HealthBarTop.fillAmount = currentHealthPoint / maximunHealth;
+            HealthBarTop.fillAmount = (float)currentHealthPoint / maximunHealth;
         }
 
         public void UpdateAmmoCountUI(bool reloading, string weaponName, int roundsInClip, int totalLeftRounds) {
