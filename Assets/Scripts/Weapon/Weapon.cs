@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+
 namespace Larry.BoxHound
 {
     public abstract class Weapon : Photon.PunBehaviour
@@ -16,6 +18,14 @@ namespace Larry.BoxHound
             AssaultRifle,
             Shotgun,
             SawnOffShotGun,
+        }
+
+        protected enum WeaponHoldingPhase
+        {
+            PullingOut,
+            Holding,
+            PullingBack,
+            Hiding
         }
 
         #region Public classes
@@ -35,6 +45,8 @@ namespace Larry.BoxHound
             public int BulletsLeft = 0;
             // How fast the weapon can shoot or use (Not used for all weapons).
             public float FireRate = 0;
+            // The duration of Pulling the weapon in and out.
+            public float PullDuration = 0.05f;
             // The duration of reloading the weapon.
             public float ReloadDuration = 1.5f;
             // How far the bullet raycast will reach, default value is 150.0f.
@@ -158,16 +170,20 @@ namespace Larry.BoxHound
         protected bool m_IsReloading = false;
         // Record the last fired time used for calculate fire rate.
         protected float m_LastFiredTimeStamp = 0.0f;
+        // The corss hair.
+        protected CorssHairManager m_CorssHair;
 
-        protected PhotonView m_view;
+        protected WeaponHoldingPhase m_Phase = WeaponHoldingPhase.Hiding;
         #endregion
 
         #region Public methods.
         public virtual void Init(PhotonView managerView) {
-
-            m_view = managerView;
             //Set the magazine size
             m_WeaponData.BulletsLeft = m_WeaponData.MagazineSize;
+
+            if (!m_CorssHair) {
+                m_CorssHair = FindObjectOfType<CorssHairManager>();
+            }
 
             // A temporary way to update the UI
             GameUIManager.Instance.GameInfoUI.UpdateAmmoCountUI(false, 
@@ -187,11 +203,7 @@ namespace Larry.BoxHound
             #endregion
 
             // Hide the weapon at the beginning of the game.
-            ShowWeapon(false);
-        }
-
-        public virtual void ShowWeapon(bool show) {
-            this.gameObject.SetActive(!show);
+            ShowWeaponModel(false);
         }
 
         public abstract void Process();
@@ -235,6 +247,8 @@ namespace Larry.BoxHound
 
         private void HitOnTarget() {
         }
+
+        public abstract void ShowWeaponModel(bool show);
 
         protected void BulletHitOnObject(RaycastHit hit) {
             #region Hit on metal

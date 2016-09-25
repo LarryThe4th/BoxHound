@@ -11,14 +11,16 @@ namespace Larry.BoxHound
         private class WeaponHolders {
             [Header("Handgun Holders")]
             [Tooltip("The root of the weapon object.")]
-            public GameObject Holder;
+            public Transform Holder;
             [Tooltip("The handgun's slide.")]
-            public GameObject Slide;
+            public MeshRenderer Slide;
+            [Tooltip("The handgun's main frame.")]
+            public MeshRenderer MainFrame;
             [Tooltip("The magazine that is alread inserted in the weapon, " +
                 "when reload this will become invisible untill the reload animation finished.")]
-            public MeshRenderer InGunMagazine;
+            public MeshRenderer LoadedMagazine;
             [Tooltip("Used in reloading animating and only visible durling reload.")]
-            public GameObject NewFullMagzine;
+            public MeshRenderer NewFullMagzine;
 
             [Header("Particle System")]
             // Particle system
@@ -52,13 +54,17 @@ namespace Larry.BoxHound
             public string SlideCocking;
             [Tooltip("When the gun is out of ammo, slide lock back after the last shot.")]
             public string SlideLockBack;
+            [Tooltip("Pull out the gun.")]
+            public string PullOut;
+            [Tooltip("Pull back the gun.")]
+            public string PullBack;
         }
         [System.Serializable]
         private class WeaponSounds {
             [Tooltip("Shooting Sounds")]
             [Header("Weapon Sound source")]
             public AudioSource Firing = null;
-            public AudioSource Sliding = null; 
+            public AudioSource Sliding = null;
             public AudioSource Reloading = null;
             public AudioSource Magazine = null;
 
@@ -91,62 +97,144 @@ namespace Larry.BoxHound
         private WeaponSounds m_WeaponSound;
 
         //For the handgun animation
+
+        private float m_StartReloadTimeStamp = 0.0f;
         private bool m_HasPlayedOutOfAmmoAnimation = false;
         private bool m_SliderLockbacked = false;
+
+        // Ignore "Player" collision
+        LayerMask m_layerMask;
         #endregion
 
         public override void Init(PhotonView managerView)
         {
             base.Init(managerView);
+            m_layerMask = ~(1 << LayerMask.NameToLayer("LocalPlayer"));
         }
 
         public override void Process()
         {
-            #region Firing
-            // If the user just click right mouse button
-            // while the gun is not out of ammo and its not durling reloading.
-            if (Input.GetMouseButtonDown(0) && !m_OutOfAmmo && !m_IsReloading)
-            {
-                // Shot Animation sync through the network
-                photonView.RPC("WeaponFireAnimation", PhotonTargets.All);
-
-                // Cast a ray as the bullet.
-                photonView.RPC("RayCastBullet", PhotonTargets.All, 
-                    m_SpawnPoint.BulletSpawnPoint.position, 
-                    m_SpawnPoint.BulletSpawnPoint.forward);
-
-                // Reduce one round form the magazine/clip after shooting and
-                // update the local client's UI.
-                ReduceOneRound();
-            }
-            #endregion
-
-            #region If out of ammo
-            if (m_WeaponData.BulletsLeft == 0 && !m_IsReloading)
-            {
-                // Play the slide animation once only
-                if (!m_HasPlayedOutOfAmmoAnimation)
-                {
-                    // Out of ammo animation sync through the network
-                    photonView.RPC("OutOfAmmoAnimation", PhotonTargets.All);
+            // When the gun is hiding and going to pull out.
+            if (m_Phase == WeaponHoldingPhase.Hiding) {
+                if (Input.GetMouseButtonDown(1)) {
+                    // The weapon now is pulling out.
+                    m_Phase = WeaponHoldingPhase.PullingOut;
+                    photonView.RPC("PullOut", PhotonTargets.All);
+                    // After waiting the pull out animation finished, the gun now is pulled out.
+                    m_Phase = WeaponHoldingPhase.Holding;
                 }
-
-                // Set flags on local client.
-                OnWeaponDry();
             }
-            #endregion
 
-            #region Reloading
-            if (Input.GetKeyDown(KeyCode.R) &&
-                m_WeaponData.BulletsLeft <= m_WeaponData.MagazineSize &&
-                !m_IsReloading)
+            else if ((m_Phase == WeaponHoldingPhase.Holding || m_Phase == WeaponHoldingPhase.PullingOut) && Input.GetMouseButtonUp(1))
             {
-                // The reload animation will sync through the network, else
-                // will be only effect on loacl client.
-                OnReloading();
+                // If player try to hide the weapon when the gun is still reloading.
+                if (m_IsReloading)
+                {
+                    // wait unity reload finish and then pull it back.
+                    Invoke("PullbackDelay", m_WeaponData.ReloadDuration - m_StartReloadTimeStamp);
+                }
+                else {
+                    PullbackDelay();
+                }
             }
-            #endregion
+
+            // If the gun is holding, than it can shoot and reload.
+            else if (m_Phase == WeaponHoldingPhase.Holding) {
+                #region Firing
+                // If the user just click right mouse button
+                // while the gun is not out of ammo and its not durling reloading.
+                if (Input.GetMouseButtonDown(0) && !m_OutOfAmmo && !m_IsReloading)
+                {
+                    // Shot Animation sync through the network
+                    photonView.RPC("WeaponFireAnimation", PhotonTargets.All);
+
+                    // Cast a ray as the bullet.
+                    RayCastBullet(RoomManager.LocalPlayer.GetMainCameraTransform.position,
+                        RoomManager.LocalPlayer.GetMainCameraTransform.forward);
+
+                    // Reduce one round form the magazine/clip after shooting and
+                    // update the local client's UI.
+                    ReduceOneRound();
+                }
+                #endregion
+
+                #region If out of ammo
+                if (m_WeaponData.BulletsLeft == 0 && !m_IsReloading)
+                {
+                    // Play the slide animation once only
+                    if (!m_HasPlayedOutOfAmmoAnimation)
+                    {
+                        // Out of ammo animation sync through the network
+                        photonView.RPC("OutOfAmmoAnimation", PhotonTargets.All);
+                    }
+
+                    // Set flags on local client.
+                    OnWeaponDry();
+                }
+                #endregion
+
+                #region Reloading
+                if (Input.GetKeyDown(KeyCode.R) &&
+                    m_WeaponData.BulletsLeft <= m_WeaponData.MagazineSize &&
+                    !m_IsReloading)
+                {
+                    // The reload animation will sync through the network, else
+                    // will be only effect on loacl client.
+                    OnReloading();
+                }
+                #endregion
+            }
+
+            // Calculate how long did the reloading process last.
+            if (m_IsReloading) {
+                m_StartReloadTimeStamp += Time.deltaTime;
+            }
         }
+
+        public override void ShowWeaponModel(bool show) {
+            m_WeaponHolder.Slide.enabled = show;
+            m_WeaponHolder.MainFrame.enabled = show;
+            m_WeaponHolder.LoadedMagazine.enabled = show;
+        }
+
+        #region When pull in or pull out weapon
+        [PunRPC]
+        private void PullOut() {
+            // Now the weapon is visiable.
+            ShowWeaponModel(true);
+
+            // Show corss hair.
+            m_CorssHair.ShowCorssHair(true);
+
+            // Player the pull out animation.
+            m_Animation.WeaponMainFrame.Play(m_Animation.PullOut);
+        }
+        [PunRPC]
+        private void PullBack() {
+            // The weapon now is pulling out.
+            m_Phase = WeaponHoldingPhase.PullingBack;
+
+            // Show corss hair.
+            m_CorssHair.ShowCorssHair(false);
+
+            // Player the pull back animation.
+            m_Animation.WeaponMainFrame.Play(m_Animation.PullBack);
+        }
+
+        private void PullbackDelay()
+        {
+            photonView.RPC("PullBack", PhotonTargets.All);
+        }
+
+        // Animation event
+        public void PulledBack() {
+            // Hide the weapon
+            ShowWeaponModel(false);
+
+            // After waiting the pull back animation finished, the gun now is hided.
+            m_Phase = WeaponHoldingPhase.Hiding;
+        }
+        #endregion
 
         #region When weapon firing
         /// <summary>
@@ -177,7 +265,6 @@ namespace Larry.BoxHound
         /// <summary>
         /// Cast a ray form the gun as the bullet and detecte if it hits anything. 
         /// </summary>
-        [PunRPC]
         public void RayCastBullet(Vector3 startLocation, Vector3 direction)
         {
             // Raycast bullet
@@ -187,20 +274,17 @@ namespace Larry.BoxHound
 
             #region Raycast bullet from bullet spawn point.
             //Send out the raycast from the "bulletSpawnPoint" position
-            if (Physics.Raycast(startLocation, direction, out hit))
+            if (Physics.Raycast(startLocation, direction, out hit, m_WeaponData.BulletDistance, m_layerMask))
             {
-
-                // If a rigibody is hit, add bullet force to it.
-                //if (hit.rigidbody != null)
-                //{
-                //    hit.rigidbody.AddForce(ray.direction * m_WeaponData.BulletForce);
-                //}
-
                 // If the raycast hit gameObject the taged as "Target"
                 if (hit.transform.tag == "Target")
                 {
-                    //Instantiate(m_ImpactsAndTags.MetalImpactPrefab, hit.point,
-                    //    Quaternion.FromToRotation(Vector3.forward, hit.normal));
+                    Debug.Log("Hit!");
+                    hit.transform.GetComponent<CharacterManager>().HandleDamage.TakeDamage(hit.point, m_WeaponData.DamagePerShot);
+
+                    // Spawn bullet impact on surface
+                    Instantiate(m_ImpactsAndTags.WoodImpactPrefab, hit.point,
+                            Quaternion.FromToRotation(Vector3.forward, hit.normal));
                 }
 
                 // Visualize the hit result by detecting what kinds of target did the bullet hits.
@@ -272,6 +356,9 @@ namespace Larry.BoxHound
 
         private IEnumerator Reload()
         {
+            // Reset the reload time stamp.
+            m_StartReloadTimeStamp = 0.0f;
+
             // Can't switch weapon while reloading.
             m_CanSwitchWeapon = true;
 
@@ -289,7 +376,7 @@ namespace Larry.BoxHound
             //    m_SpawnPoint.MagSpawnPoint.rotation);
 
             // Hide the new instantiate empty magazine.
-            m_WeaponHolder.InGunMagazine.enabled = false;
+            m_WeaponHolder.LoadedMagazine.enabled = false;
 
             // Reloading Animation sync through the network
             photonView.RPC("ReloadingAnimation", PhotonTargets.All);
@@ -309,9 +396,6 @@ namespace Larry.BoxHound
                 m_WeaponData.BulletsLeft = m_WeaponData.MagazineSize + 1;
             else
                 m_WeaponData.BulletsLeft = m_WeaponData.MagazineSize;
-
-            // Make the magazine visible again.
-            m_WeaponHolder.InGunMagazine.enabled = true;
 
             // Reload complete, weapon is hot.
             m_HasPlayedOutOfAmmoAnimation = false;
@@ -342,7 +426,7 @@ namespace Larry.BoxHound
 
             // Play weapon reload aimation.
             m_Animation.WeaponMainFrame.Play(m_Animation.Reload);
-            m_Animation.NewMagazine.Play(m_Animation.FullMagInsert);
+            // m_Animation.NewMagazine.Play(m_Animation.FullMagInsert);
         }
 
         [PunRPC]

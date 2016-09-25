@@ -13,6 +13,7 @@ namespace Larry.BoxHound
         public GameOpening GameOpeningUI;         // The Game opening UI.
         public GameInfo GameInfoUI;               // The player UI.
 
+        public Transform FloatingNumberRoot;
         #endregion
 
         #region Private variables
