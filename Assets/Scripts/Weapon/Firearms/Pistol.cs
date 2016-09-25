@@ -106,10 +106,16 @@ namespace Larry.BoxHound
         LayerMask m_layerMask;
         #endregion
 
+
+
         public override void Init(PhotonView managerView)
         {
             base.Init(managerView);
+<<<<<<< HEAD
             m_layerMask = ~(1 << LayerMask.NameToLayer("LocalPlayer"));
+=======
+            m_layerMask = ~(1 << LayerMask.NameToLayer("Player"));
+>>>>>>> origin/master
         }
 
         public override void Process()
@@ -138,6 +144,7 @@ namespace Larry.BoxHound
                 }
             }
 
+<<<<<<< HEAD
             // If the gun is holding, than it can shoot and reload.
             else if (m_Phase == WeaponHoldingPhase.Holding) {
                 #region Firing
@@ -147,6 +154,15 @@ namespace Larry.BoxHound
                 {
                     // Shot Animation sync through the network
                     photonView.RPC("WeaponFireAnimation", PhotonTargets.All);
+=======
+                // Cast a ray as the bullet.
+                photonView.RPC("RayCastBullet", PhotonTargets.All,
+                    RoomManager.LocalPlayer.GetMainCameraTransform.position,
+                    RoomManager.LocalPlayer.GetMainCameraTransform.forward);
+                //photonView.RPC("RayCastBullet", PhotonTargets.All, 
+                //    m_SpawnPoint.BulletSpawnPoint.position, 
+                //    m_SpawnPoint.BulletSpawnPoint.forward);
+>>>>>>> origin/master
 
                     // Cast a ray as the bullet.
                     RayCastBullet(RoomManager.LocalPlayer.GetMainCameraTransform.position,
@@ -262,6 +278,7 @@ namespace Larry.BoxHound
                             m_SpawnPoint.CasingSpawnPoint.rotation);
         }
 
+
         /// <summary>
         /// Cast a ray form the gun as the bullet and detecte if it hits anything. 
         /// </summary>
@@ -279,8 +296,12 @@ namespace Larry.BoxHound
                 // If the raycast hit gameObject the taged as "Target"
                 if (hit.transform.tag == "Target")
                 {
+<<<<<<< HEAD
                     Debug.Log("Hit!");
                     hit.transform.GetComponent<CharacterManager>().HandleDamage.TakeDamage(hit.point, m_WeaponData.DamagePerShot);
+=======
+                    hit.transform.GetComponent<DamageHandler>().TakeDamage(m_WeaponData.DamagePerShot);
+>>>>>>> origin/master
 
                     // Spawn bullet impact on surface
                     Instantiate(m_ImpactsAndTags.WoodImpactPrefab, hit.point,

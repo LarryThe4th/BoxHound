@@ -42,6 +42,7 @@ namespace Larry.BoxHound
             photonView.RPC("SyncDamage", PhotonTargets.Others, damage);
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// This only happen in loacl client.
         /// </summary>
@@ -57,6 +58,8 @@ namespace Larry.BoxHound
                 new object[1] { damage });
         }
 
+=======
+>>>>>>> origin/master
         [PunRPC]
         private void SyncDamage(int damage) {
             // Reduce current health points.

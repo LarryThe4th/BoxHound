@@ -12,7 +12,10 @@ namespace Larry.BoxHound
 
         public CharacterControl m_Control;
         public CharacterController m_Controller;
+<<<<<<< HEAD
         
+=======
+>>>>>>> origin/master
         #endregion
 
         #region Private variables
@@ -40,11 +43,14 @@ namespace Larry.BoxHound
             get { return CharacterMainCamera.transform; } 
         }
 
+<<<<<<< HEAD
         public Camera GetMainCamera
         {
             get { return CharacterMainCamera; }
         }
 
+=======
+>>>>>>> origin/master
         // This is for not only the local player but all the player object in scene.
         // When a local player join a room which is already some other players in it,
         // other player's game object will not initalize by the RoomManager because 
@@ -154,6 +160,7 @@ namespace Larry.BoxHound
         /// </summary>
         /// <param name="hide"></param>
         public void HideCharacter(bool hide) {
+            Debug.Log("Hide player" + hide);
             PlayerModel.SetActive(!hide);
         }
     }
