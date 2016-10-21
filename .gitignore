@@ -214,3 +214,41 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# =============== #
+# Unity generated #
+# =============== #
+Temp/
+Library/
+Photon Unity Networking/
+PhotonChatApi/
+Plugins/
+*.prefab
+*.png
+*.unity
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+obj/
+*.svd
+*.userprefs
+/*.csproj
+*.pidb
+*.suo
+/*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
