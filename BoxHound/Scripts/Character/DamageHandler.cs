@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using BoxHound.UI;
 
 namespace BoxHound
 {
@@ -16,7 +17,7 @@ namespace BoxHound
         /// <param name="damage"></param>
         public void TakeDamage(int weaponIndex, Transform damageSource, Vector3 hitPosition, int damage) {
             // The poping damage number is happen in loacl.
-            // CharacterManager.LocalPlayer.GetPlayerHUD.PopFloatingNumber(hitPosition, damage);
+            CharacterManager.LocalPlayer.GetPlayerHUD.GetFloatingDamageNumber.PopFloatingNumber(hitPosition, damage);
             // Send the damage info to all the remote object.
             photonView.RPC("OnSyncDamage", photonView.owner, weaponIndex, damage, hitPosition);
         }
@@ -31,7 +32,7 @@ namespace BoxHound
             #region Damage indicator
             DamageIndicatorInfo info = new DamageIndicatorInfo(attackerPosition);
             info.AttackerID = attackerinfo.photonView.ownerId;
-            DamageIndicatorManager.OnDamageIndicator(info);
+            DamageIndicatorManager.NewDamageIndicator(info);
             #endregion
 
             #region Health points

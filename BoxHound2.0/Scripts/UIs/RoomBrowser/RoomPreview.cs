@@ -24,47 +24,47 @@ namespace BoxHound.UI
         // -------------- Private variable -------------
         [Tooltip("The cache of MapPreview's Image UI compoment.")]
         [SerializeField]
-        private Image MapPreviewImage;    // The image represent the game map.
+        private Image m_MapPreviewImage;    // The image represent the game map.
 
         [Tooltip("The cache of MapName preview's Text UI compoment.")]
         [SerializeField]
-        private Text MapNameText;        // The name of the game map.
+        private Text m_MapNameText;        // The name of the game map.
 
         [Tooltip("The cache of Room name preview's Text UI compoment.")]
         [SerializeField]
-        private Text RoomNameText;        // The name of the room.
+        private Text m_RoomNameText;        // The name of the room.
 
         [Tooltip("The cache of GameMode preview's Text UI compoment.")]
         [SerializeField]
-        private Text GameModeText;       // The game mode.
+        private Text m_GameModeText;       // The game mode.
 
         [Tooltip("The cache of PlayerCount preview's Text UI compoment.")]
         [SerializeField]
-        private Text PlayerCountLabelText;    // The number of current in-game player and the maximun player count.
+        private Text m_PlayerCountLabelText;    // The number of current in-game player and the maximun player count.
         [SerializeField]
-        private Text PlayerCountText;
+        private Text m_PlayerCountText;
 
         [Tooltip("The cache of player health limit preview's Text UI compoment.")]
         [SerializeField]
-        private Text HealthLimitLabelText;    // The health limit of each player in room.
+        private Text m_HealthLimitLabelText;    // The health limit of each player in room.
         [SerializeField]
-        private Text HealthLimitText;
+        private Text m_HealthLimitText;
 
         [Tooltip("The cache of TimeLimit preview's Text UI compoment.")]
         [SerializeField]
-        private Text TimeLimitLabelText;      // The time limit pre round.
+        private Text m_TimeLimitLabelText;      // The time limit pre round.
         [SerializeField]
-        private Text TimeLimitText;
+        private Text m_TimeLimitText;
 
         [Tooltip("The cache of ScoreLimit preview's Text UI compoment.")]
         [SerializeField]
-        private Text ScoreLimitLabelText;      // The score limit pre round.
+        private Text m_ScoreLimitLabelText;      // The score limit pre round.
         [SerializeField]
-        private Text ScoreLimitText;
+        private Text m_ScoreLimitText;
 
         [Tooltip("The cache of join room button compoment.")]
         [SerializeField]
-        private Button JoinRoomButton;
+        private Button m_JoinRoomButton;
 
         private string m_RoomFull = "";
         private string m_Join = "";
@@ -89,7 +89,7 @@ namespace BoxHound.UI
         {
             RoomPreviewAnimation = GetComponent<Animator>();
             // Regster the button on click event.
-            JoinRoomButton.onClick.AddListener(delegate { OnClickedJoinRoomButton(); });
+            m_JoinRoomButton.onClick.AddListener(delegate { OnClickedJoinRoomButton(); });
         }
         #endregion
 
@@ -122,12 +122,12 @@ namespace BoxHound.UI
 
             if (roomInfo.customProperties.ContainsKey(RoomProperties.MapIndex))
             {
-                MapPreviewImage.sprite = GameMapManager.GetGameMap((int)roomInfo.customProperties[RoomProperties.MapIndex]).GameMapPreviewImage;
-                MapNameText.text = GameMapManager.GetGameMap((int)roomInfo.customProperties[RoomProperties.MapIndex]).GameMapName;
+                m_MapPreviewImage.sprite = GameMapManager.GetGameMap((int)roomInfo.customProperties[RoomProperties.MapIndex]).GameMapPreviewImage;
+                m_MapNameText.text = GameMapManager.GetGameMap((int)roomInfo.customProperties[RoomProperties.MapIndex]).GameMapName;
             }
 
             SelectedRoomName = roomInfo.name;
-            RoomNameText.text = SelectedRoomName;
+            m_RoomNameText.text = SelectedRoomName;
 
             if (roomInfo.customProperties.ContainsKey(RoomProperties.RoomCreateDate))
             {
@@ -137,38 +137,38 @@ namespace BoxHound.UI
             if (roomInfo.customProperties.ContainsKey(RoomProperties.GameModeIndex))
             {
                 GameModeManager.GameModeDetail detail = GameModeManager.GetGameModeDetail((int)roomInfo.customProperties[RoomProperties.GameModeIndex]);
-                GameModeText.text = detail.GameModeName + "(" + detail.GameModeForShort + ")";
+                m_GameModeText.text = detail.GameModeName + "(" + detail.GameModeForShort + ")";
             }
 
             if (roomInfo.playerCount < roomInfo.maxPlayers) {
-                PlayerCountText.text = roomInfo.playerCount + " / " + roomInfo.maxPlayers;
+                m_PlayerCountText.text = roomInfo.playerCount + " / " + roomInfo.maxPlayers;
             } else {
-                PlayerCountText.text = "< Color = red > " + roomInfo.playerCount + " / " + roomInfo.maxPlayers + " </ Color > ";
+                m_PlayerCountText.text = "< Color = red > " + roomInfo.playerCount + " / " + roomInfo.maxPlayers + " </ Color > ";
             }
 
             if (roomInfo.customProperties.ContainsKey(RoomProperties.HealthLimit))
             {
-                HealthLimitText.text = ((int)roomInfo.customProperties[RoomProperties.HealthLimit]).ToString();
+                m_HealthLimitText.text = ((int)roomInfo.customProperties[RoomProperties.HealthLimit]).ToString();
             }
 
             if (roomInfo.customProperties.ContainsKey(RoomProperties.RoundTimeLimit))
             {
-                TimeLimitText.text = roomInfo.customProperties[RoomProperties.RoundTimeLimit].ToString() + " " + GameLanguageManager.TimeUnit;
+                m_TimeLimitText.text = roomInfo.customProperties[RoomProperties.RoundTimeLimit].ToString() + " " + GameLanguageManager.TimeUnit;
             }
 
-            ScoreLimitText.text = "N/A";
+            m_ScoreLimitText.text = "N/A";
 
 
 
             if (roomInfo.playerCount == roomInfo.maxPlayers)
             {
-                JoinRoomButton.interactable = false;
-                JoinRoomButton.GetComponentInChildren<Text>().text = m_RoomFull;
+                m_JoinRoomButton.interactable = false;
+                m_JoinRoomButton.GetComponentInChildren<Text>().text = m_RoomFull;
             }
             else
             {
-                JoinRoomButton.interactable = true;
-                JoinRoomButton.GetComponentInChildren<Text>().text = m_Join;
+                m_JoinRoomButton.interactable = true;
+                m_JoinRoomButton.GetComponentInChildren<Text>().text = m_Join;
             }
         }
 
@@ -191,24 +191,23 @@ namespace BoxHound.UI
         public void OnClickedJoinRoomButton()
         {
             //SoundManager.Instance.PlayUISFX(SoundManager.UISFX.MenuConfirm);
-
             //// DialogBase.OnCallDialog(DialogBase.Dialogs.CreatingOrJoiningRoom, true, "入室中、しばらくお待ちください");
-
-            //NetWorkManager.Instance.JoinRoom(SelectedRoomName);
+            NetworkManager.Instance.JoinRoom(SelectedRoomName);
+            m_JoinRoomButton.interactable = false;
         }
 
         private void SetLanguage(GameLanguageManager.SupportedLanguage language)
         {
-            PlayerCountLabelText.text = 
+            m_PlayerCountLabelText.text = 
                 GameLanguageManager.GetText(GameLanguageManager.KeyWord.RooP_PlayerCountLabel, language);
 
-            HealthLimitLabelText.text =
+            m_HealthLimitLabelText.text =
                 GameLanguageManager.GetText(GameLanguageManager.KeyWord.RooP_HealthLimitLabel, language);
 
-            TimeLimitLabelText.text =
+            m_TimeLimitLabelText.text =
                 GameLanguageManager.GetText(GameLanguageManager.KeyWord.RooP_TimeLimitLabel, language);
 
-            ScoreLimitLabelText.text =
+            m_ScoreLimitLabelText.text =
                 GameLanguageManager.GetText(GameLanguageManager.KeyWord.Roop_ScoreLimitLabel, language);
 
             m_RoomFull = GameLanguageManager.GetText(GameLanguageManager.KeyWord.RooP_JoinButtonRoomFull, language);

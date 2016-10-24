@@ -135,7 +135,7 @@ namespace BoxHound.UI {
             m_HealthPoints.text = currentHealthPoint.ToString();
             m_HealthBarTop.fillAmount = (float)currentHealthPoint / maximunHealth;
         }
-
+            
         public void UpdateAmmoCountUI(AmmoState state, string weaponName, int roundsInClip, int totalLeftRounds, int magazineSize, bool isDefaultWeapon = false) {
             m_WeaponName.text = weaponName;
 
@@ -185,11 +185,11 @@ namespace BoxHound.UI {
         }
 
         public void ProcessHUD() {
-            // If the respawn count down is displaying, 
-            // the only reason is that the player is died.
-            if (RespawnCountDownUI.IsDisplaying()) {
-                RespawnCountDownUI.UpdateRespawnCountDown();
-            }
+            //// If the respawn count down is displaying, 
+            //// the only reason is that the player is died.
+            //if (RespawnCountDownUI.IsDisplaying()) {
+            //    RespawnCountDownUI.UpdateRespawnCountDown();
+            //}
 
             // RoundInfoUI.UdpateTimer();
 

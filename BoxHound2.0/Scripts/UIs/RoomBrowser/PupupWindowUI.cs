@@ -41,9 +41,6 @@ namespace BoxHound.UI {
             if (!m_Displaying) return;
             m_Displaying = false;
             if (!m_Animator) m_Animator = GetComponent<Animator>();
-
-            Debug.Log("Pupback");
-
             m_Animator.SetBool("ShowDialog", m_Displaying);
         }
 

@@ -46,6 +46,11 @@ namespace BoxHound {
             CreR_GameModeLable,
             CreR_TimeLimiLable,
             CreR_HealthLimitLabel,
+            CreR_CreatingRoomText,
+            CreR_NeedAName,
+            CreR_SameNameExistWarning,
+            CreR_CreateRoomConfirm,
+            CreR_CreateRoomDeny,
             RooP_PlayerCountLabel,
             RooP_HealthLimitLabel,
             RooP_TimeLimitLabel,
@@ -55,7 +60,9 @@ namespace BoxHound {
             Open_StartGameTextPleaseStandBy,
             Open_StartGameTextStart,
             Weap_ReloadingText,
-            Weap_OutOfAmmo
+            Weap_OutOfAmmo,
+            Resp_RespawningInSce,
+            Resp_MurderWeaponText,
         }
 
         public static string TimeUnit {

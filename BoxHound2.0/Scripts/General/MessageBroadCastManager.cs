@@ -88,5 +88,13 @@
         {
             if (PlayerStartGameEvent != null) PlayerStartGameEvent();
         }
+
+        public delegate void GamePause(bool pause);
+        public static GamePause GamePauseEvent;
+        public static void OnGamePause(bool pause)
+        {
+            if (GamePauseEvent != null) GamePauseEvent(pause);
+        }
+
     }
 }

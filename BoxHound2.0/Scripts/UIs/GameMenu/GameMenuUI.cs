@@ -7,6 +7,8 @@ namespace BoxHound.UI {
     [RequireComponent(typeof(Animator))]
     public class GameMenuUI : UIBase
     {
+        public static bool EnbaleHotKey = true;
+
         #region Private variable
         private Animator m_Animator;
 
@@ -65,6 +67,7 @@ namespace BoxHound.UI {
 
         public void OnClickedReturn() {
             UIManager.Instance.HideUI(this);
+            MessageBroadCastManager.OnGamePause(false);
         }
 
         public void OnClickedSettings() {
@@ -99,6 +102,7 @@ namespace BoxHound.UI {
         {
             base.HideUI();
 
+
             m_Animator.SetBool(m_AnimatorParameterKey, false);
         }
 
@@ -119,16 +123,21 @@ namespace BoxHound.UI {
         public override void Process()
         {
             base.Process();
-            if (Input.GetKeyDown(KeyCode.Escape))
+
+            if (Input.GetKeyDown(KeyCode.Escape) && EnbaleHotKey)
             {
                 if (!IsDisplaying && !m_InMenu)
                 {
                     m_InMenu = true;
+                    MessageBroadCastManager.OnGamePause(true);
                     UIManager.Instance.ShowUI(Properties.GetSceneUI);
                 }
                 else
                 {
+                    
                     m_InMenu = false;
+                    // A ltiile hacky way
+                    MessageBroadCastManager.OnGamePause(false);
                     UIManager.Instance.HideUI(Properties.GetSceneUI);
                 }
             }

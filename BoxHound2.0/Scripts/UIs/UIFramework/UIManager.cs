@@ -62,6 +62,8 @@ namespace BoxHound.UIframework {
             GameRoomUI,
             GameOpeningUI,
             PlayerHUDUI,
+            DamageHUDUI,
+            RespawnCountDownUI,
         }
         #endregion
 
@@ -367,7 +369,6 @@ namespace BoxHound.UIframework {
                 MessageBroadCastManager.OnEnableCameraBlurEffect(false);
             }
             else {
-                Debug.Log(m_AboveBlurEffectUIDisplayCount);
                 MessageBroadCastManager.OnEnableCameraBlurEffect(true);
             }
         }

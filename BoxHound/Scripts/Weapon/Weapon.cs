@@ -354,7 +354,7 @@ namespace BoxHound
                 {
                     m_TargetCharacter = hit.transform.GetComponent<CharacterManager>();
 
-                    if (RoomManager.CurrentGameMode.GetGameMode() == GameModeManager.GameModes.FreeForAll)
+                    if (GameRoomManager.CurrentGameMode.GetGameMode() == GameModeManager.GameModes.FreeForAll)
                     {
                         m_TargetCharacter.HandleDamage.TakeDamage(
                         CharacterManager.LocalPlayer.GetWeaponManager.CurrentUsingWeaponIndex,

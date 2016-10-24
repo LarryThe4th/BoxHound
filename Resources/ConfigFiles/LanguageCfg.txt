@@ -35,6 +35,11 @@ CreR_PlayerLimitLable,Player limit,玩家人数,プレイヤ数
 CreR_GameModeLable,Game mode,游戏模式,ゲームモード
 CreR_TimeLimiLable,Time limit,时间限制,時間制限
 CreR_HealthLimitLabel,Health limit,生命值上限,ＨＰ上限
+CreR_CreatingRoomText,Creating room,创造房间中,ルーム作成中
+CreR_NeedAName,Room name need at least one character,房间名不能为空,ルーム名を設定してください
+CreR_SameNameExistWarning,Room have same name exist,房间名已存在,同じ名前のルームは既に存在します
+CreR_CreateRoomConfirm,Create a room,创造房间后自动加入游戏,ルームを作成し入室する
+CreR_CreateRoomDeny,Set a room name,请设定房间名,ルーム名を設定してください
 RooP_PlayerCountLabel,Player count,玩家数量,プレイヤ数
 RooP_HealthLimitLabel,Health limit,血量上限,ＨＰ上限
 RooP_TimeLimitLabel,TimerLimit,时间限制,時間制限
@@ -45,3 +50,5 @@ Open_StartGameTextPleaseStandBy,Please stand by,请稍等,間もなく始めま�
 Open_StartGameTextStart,Start Game,开始游戏,ゲーム開始
 Weap_ReloadingText,Reloading,填装中,装填中
 Weap_OutOfAmmo,OutOfAmmo,弹药耗尽,弾キレ
+Resp_RespawningInSce,Respawning in,你被干掉了,やられました
+Resp_MurderWeaponText,Using a,使用了,武器は

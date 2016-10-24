@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
-namespace BoxHound
+namespace BoxHound.UI
 {
     /// <summary>
     /// All the information about the indicator cache in here.

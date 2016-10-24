@@ -75,6 +75,10 @@ namespace BoxHound.UI {
         private bool m_CreatingRoom = false;
 
         private readonly string m_AnimationParameterKeyword = "ShowPage";
+
+        private string m_CreatingRoomText = "";
+        private string m_NeedANameForCreateNewRoom = "";
+        private string m_SameNameExistWarning = "";
         #endregion
 
         #region Private methods
@@ -187,7 +191,7 @@ namespace BoxHound.UI {
             // Check if the room name is ok to be used.
             if (RoomNameCheck())
             {
-                CreateRoomButtonText.text = "ルームを作成中、しばらくお待ちください";
+                CreateRoomButtonText.text = GameLanguageManager.GetText(GameLanguageManager.KeyWord.CreR_CreatingRoomText, GameLanguageManager.CurrentLanguage);
                 // Disable all user input while creating a game room
                 // LobbyManager.IgnoreUserInput = true;
                 // Set room options based on the user settings.
@@ -197,7 +201,7 @@ namespace BoxHound.UI {
             }
             else
             {
-                CreateRoomButtonText.text = "同じ名前のルームが存在しており、ほかのルーム名で再設定してください";
+                CreateRoomButtonText.text = GameLanguageManager.GetText(GameLanguageManager.KeyWord.CreR_SameNameExistWarning, GameLanguageManager.CurrentLanguage);
             }
         }
 
@@ -417,6 +421,9 @@ namespace BoxHound.UI {
             if (CreateRoomButton)
             {
                 CreateRoomButton.onClick.AddListener(delegate { OnClikedCreateRoomButton(); });
+                CreateRoomButton.interactable = false;
+                CreateRoomButton.GetComponentInChildren<Text>().text =
+                    GameLanguageManager.GetText(GameLanguageManager.KeyWord.CreR_NeedAName, GameLanguageManager.CurrentLanguage);
             }
             #endregion
 

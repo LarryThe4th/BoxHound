@@ -5,11 +5,11 @@ namespace BoxHound {
     public abstract class SceneManagerBase : MonoBehaviour
     {
         #region Events
-        private void OnEnable()
+        public void OnEnable()
         {
             EventRegister(true);
         }
-        private void OnDisable()
+        public void OnDisable()
         {
             EventRegister(false);
         }
@@ -28,6 +28,7 @@ namespace BoxHound {
             }
 
             IgnoreUserInput = false;
+
             InitScene();
 
             MessageBroadCastManager.OnSceneFinishedInit();
@@ -35,7 +36,9 @@ namespace BoxHound {
 
         public abstract void InitScene();
 
-        protected virtual void EventRegister(bool reigist) { }
+        protected virtual void EventRegister(bool reigist) {
+            // Empty
+        }
     }
 }
 

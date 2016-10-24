@@ -5,17 +5,6 @@ using BoxHound.UIframework;
 namespace BoxHound {
     public class GameRoomManager : SceneManagerBase
     {
-
-        #region Events
-        private void OnEnable() {
-            MessageBroadCastManager.PlayerStartGameEvent += OnPlayerStartGame;
-        }
-        private void OnDisable() {
-            MessageBroadCastManager.PlayerStartGameEvent -= OnPlayerStartGame;
-        }
-        #endregion
-
-
         #region Public Variables
         // -------------- Public variable -------------
         public GameObject PlayerPrefab;
@@ -60,6 +49,10 @@ namespace BoxHound {
         {
             Instance = this;
 
+            // Disable the UI hotkeys for now...
+            // There must be a better way to do this.
+            BoxHound.UI.GameMenuUI.EnbaleHotKey = false;
+
             #region Camera related control
             // Disable UI manager's scene camera.
             UIManager.Instance.EnableUISceneCamera(false);
@@ -83,7 +76,8 @@ namespace BoxHound {
 
             // After finished all initiaztion, Show the Preparation UI.
             // let the player choise a team or wait until round starts.
-            UIManager.Instance.GetUI(UIManager.SceneUIs.GameOpeningUI).ShowUI();
+            // Call through the UI manager can have a blur effect on the back.
+            UIManager.Instance.ShowUI(UIManager.SceneUIs.GameOpeningUI);
         }
 
         private void InitAllAvailableGameMode()
@@ -130,9 +124,11 @@ namespace BoxHound {
         }
 
         private void InitGameRoomUI() {
+            UIManager.Instance.LoadUI(UIManager.SceneUIs.DamageHUDUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.GameOpeningUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.PlayerHUDUI);
-            // PlayerHUD
+            UIManager.Instance.LoadUI(UIManager.SceneUIs.RespawnCountDownUI);
+
             // LeaderBorad
         }
 
@@ -169,9 +165,52 @@ namespace BoxHound {
         }
 
         private void OnPlayerStartGame() {
+            BoxHound.UI.GameMenuUI.EnbaleHotKey = true;
             CharacterManager.LocalPlayer.Respawn();
         }
 
+        /// <summary>
+        /// Receive broadcast message form the broadcast manager when the game is
+        /// loacly paused, must is becuase user opened the game menu.
+        /// When game menu display, user lost contorl of loacl character.
+        /// </summary>
+        /// <param name="pause"></param>
+        private void OnGamePause(bool pause) {
+            if (CharacterManager.LocalPlayer == null) return;
+
+            // Disable the local player when game paused.
+            CharacterManager.LocalPlayer.EnableCharacterControl(!pause);
+            if (pause)
+            {
+                // If the game paused, user can freely move his/hers mouse around,
+                // even out of the window.
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else {
+                // When return to game, lock the mouse to the center of the scree,
+                // and set the mouse as disable.
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+        }
+
+        protected override void EventRegister(bool reigist)
+        {
+            base.EventRegister(reigist);
+
+            if (reigist)
+            {
+                MessageBroadCastManager.PlayerStartGameEvent += OnPlayerStartGame;
+                MessageBroadCastManager.GamePauseEvent += OnGamePause;
+            }
+            else
+            {
+                MessageBroadCastManager.PlayerStartGameEvent -= OnPlayerStartGame;
+                MessageBroadCastManager.GamePauseEvent -= OnGamePause;
+            }
+
+        }
         public void ProcessGamePhase(GamePhase currentPhase)
         {
             CurrentPhase = currentPhase;

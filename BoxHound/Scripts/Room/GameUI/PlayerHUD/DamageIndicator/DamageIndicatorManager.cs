@@ -1,29 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
-
-namespace BoxHound
+namespace BoxHound.UI
 {
-    public class DamageIndicatorManager : MonoBehaviour
+    public class DamageIndicatorManager : UIBase
     {
         #region Delegate and event
         public delegate void DamageIndicatorHandler(DamageIndicatorInfo info);
-        public static DamageIndicatorHandler OnDamageIndicator;
-
+        public static DamageIndicatorHandler DamageIndicatorEvent;
         public static void NewDamageIndicator(DamageIndicatorInfo info) {
-            if (OnDamageIndicator != null) OnDamageIndicator(info);
+            if (DamageIndicatorEvent != null) DamageIndicatorEvent(info);
         }
 
         private void OnEnable()
         {
             // Subscribe the function to the event
-            OnDamageIndicator += OnNewIndicator;
+            DamageIndicatorEvent += OnNewIndicator;
         }
 
         private void OnDisable()
         {
             // Unsubscribe the function form the event
-            OnDamageIndicator -= OnNewIndicator;
+            DamageIndicatorEvent -= OnNewIndicator;
         }
         #endregion
 
@@ -41,7 +40,16 @@ namespace BoxHound
         private Transform IndicatorRoot;
         #endregion
 
-        private void Start() {
+        public override void InitUI()
+        {
+            base.InitUI();
+
+            Properties = new UIProperties(
+                UIframework.UIManager.SceneUIs.DamageHUDUI, 
+                UIframework.UIManager.DisplayUIMode.Normal, 
+                UIframework.UIManager.UITypes.UnderBlurEffect, 
+                true, true);
+
             m_IndicatorList = new List<DamageIndicator>();
             m_IndicatorDisplayDuration = 4;
             m_PerfabInstanceID = 0;
@@ -201,6 +209,11 @@ namespace BoxHound
                 ac = circumference - angle;
             }
             return ac;
+        }
+
+        public override void SetLanguage(GameLanguageManager.SupportedLanguage language)
+        {
+            // Empty
         }
     }
 }

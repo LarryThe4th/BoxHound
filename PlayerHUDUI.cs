@@ -38,7 +38,20 @@ namespace BoxHound.UI {
             get { return m_Timer; }
         }
 
+        [SerializeField]
+        private KillComfirmation m_KillComfirmation;
+        public KillComfirmation GetKillComfirmation {
+            get { return m_KillComfirmation; }
+        }
+
+        [SerializeField]
+        private FloatingDamageNumberUI m_FloatingDamageNumber;
+        public FloatingDamageNumberUI GetFloatingDamageNumber
+        {
+            get { return m_FloatingDamageNumber; }
+        }
         #endregion
+
         public override void InitUI()
         {
             base.InitUI();
@@ -54,12 +67,16 @@ namespace BoxHound.UI {
             if (!m_WeaponInfo) Debug.Log("m_WeaponInfo is null");
             if (!m_CorssHair) Debug.Log("m_CorssHair is null");
             if (!GetTimer) Debug.Log("GetTimer is null");
+            if (!m_KillComfirmation) Debug.Log("m_KillComfirmation is null");
+            if (!m_FloatingDamageNumber) Debug.Log("m_FloatingDamageNumber is null");
 #endif
-
+            // Maybe i should make a base class for these guys...ummm
             m_HealthBar.Init();
             m_WeaponInfo.Init();
             m_CorssHair.Init();
             m_Timer.Init();
+            m_KillComfirmation.Init();
+            m_FloatingDamageNumber.Init();
         }
 
         public override void ShowUI()
@@ -87,6 +104,10 @@ namespace BoxHound.UI {
             ShowIngameInfo(true);
         }
 
+        private void OnGameMenuOpen(bool pause) {
+            ShowIngameInfo(!pause);
+        }
+
         public override void EventRegister(bool reigist)
         {
             base.EventRegister(reigist);
@@ -94,12 +115,13 @@ namespace BoxHound.UI {
             if (reigist)
             {
                 MessageBroadCastManager.PlayerStartGameEvent += OnPlayerSpawn;
+                MessageBroadCastManager.GamePauseEvent += OnGameMenuOpen;
             }
             else {
                 MessageBroadCastManager.PlayerStartGameEvent -= OnPlayerSpawn;
+                MessageBroadCastManager.GamePauseEvent -= OnGameMenuOpen;
             }
         }
-
 
         public override void SetLanguage(GameLanguageManager.SupportedLanguage language)
         {
@@ -112,8 +134,5 @@ namespace BoxHound.UI {
             // Update timer
             m_Timer.UdpateTimer();
         }
-
-
-
     }
 }

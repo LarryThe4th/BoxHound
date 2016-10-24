@@ -43,6 +43,8 @@ namespace BoxHound
         /// The head-up display UI for the player.
         /// </summary>
         private PlayerHUDUI m_PlayerHUD;
+
+        private RespawnCountDown m_RespawnCountDown;
         #endregion
 
         #region Public variables
@@ -50,7 +52,7 @@ namespace BoxHound
         /// <summary>
         /// The one and the only local player on each client
         /// </summary>
-        public static CharacterManager LocalPlayer;
+        public static CharacterManager LocalPlayer = null;
 
         /// <summary>
         /// The renderer of the character's model.
@@ -113,9 +115,19 @@ namespace BoxHound
         /// Get the playr HUD.
         /// </summary>
         public PlayerHUDUI GetPlayerHUD {
-            get { if (!m_PlayerHUD)
+            get { if (!m_PlayerHUD && photonView.isMine)
                     m_PlayerHUD = UIframework.UIManager.Instance.GetUI<PlayerHUDUI>(UIframework.UIManager.SceneUIs.PlayerHUDUI);
                 return m_PlayerHUD; }
+        }
+
+        public RespawnCountDown GetCountDown
+        {
+            get
+            {
+                if (!m_RespawnCountDown && photonView.isMine)
+                    m_RespawnCountDown = UIframework.UIManager.Instance.GetUI<RespawnCountDown>(UIframework.UIManager.SceneUIs.RespawnCountDownUI);
+                return m_RespawnCountDown;
+            }
         }
         #endregion
 
@@ -144,7 +156,7 @@ namespace BoxHound
                 // Set itself's layer to "player" as that the raycast will ignore this object's collider.
                 this.gameObject.layer = LayerMask.NameToLayer("Player");
 
-                // Temp
+                // Set the canvas render mode
                 if (MainCamera) {
                     UIframework.UIManager.Instance.ResetUnderBlurCanvasRenderCamera(MainCamera);
                 }
@@ -230,10 +242,9 @@ namespace BoxHound
         [PunRPC]
         private void OnEliminatedEnemy(PhotonMessageInfo info)
         {
-            if (m_PlayerHUD == null) m_PlayerHUD = GetPlayerHUD;
+            if (m_PlayerHUD == null) return;
             // Play kill confirm animation
-            // TODO
-            // m_PlayerHUD.KillConfirmUI.PlayKillConfirmAnimation();
+            m_PlayerHUD.GetKillComfirmation.PlayKillConfirmAnimation();
         }
 
         [PunRPC]
@@ -309,9 +320,8 @@ namespace BoxHound
                     // He/she will loves it i ensure you. 
                     photonView.RPC("OnEliminatedEnemy", source.sender);
 
-                    GameRoomUI.Instance.PlayerHUDUI.RespawnCountDownUI.ShowRespawnCountDown(
-                        source.sender.name, m_WeaponManager.GetWeaponByIndex(weaponIndex).GetWeaponName);
-
+                    GetCountDown.ShowRespawnCountDown(source.sender.name,
+                        m_WeaponManager.GetWeaponByIndex(weaponIndex).GetWeaponName);
                     // Add score.
                     source.sender.AddScore(100);
 
@@ -334,28 +344,11 @@ namespace BoxHound
             //UIframework.UIManager.Instance.GetUI(UIframework.UIManager.SceneUIs.PlayerHUDUI).ShowUI();
             m_PlayerHUD.ShowUI();
 
-
             int number = UnityEngine.Random.Range(0, m_WeaponManager.WeaponListCount - 1);
 
             // Call all the character on every client that has this same photon view,
             // spawn to the given location.
             photonView.RPC("OnRespawn", photonView.owner, spawnPoint.position, spawnPoint.rotation, number);
-        }
-
-        [PunRPC]
-        public void Color(PhotonMessageInfo info) {
-            // If same team.
-            if (Team == CustomRoomOptions.GetTeam((int)info.sender.customProperties[PlayerProperties.Team])) {
-                if (Team == CustomRoomOptions.Team.Blue)
-                {
-                    PlayerModel.material.SetColor("_RimColor", UnityEngine.Color.blue);
-                }
-                else if (Team == CustomRoomOptions.Team.Red) {
-                    PlayerModel.material.SetColor("_RimColor", UnityEngine.Color.red);
-                } 
-            } else {
-                PlayerModel.material.SetColor("_RimColor", UnityEngine.Color.white);
-            }
         }
 
         [PunRPC]
@@ -374,8 +367,6 @@ namespace BoxHound
             CurrentHealth = MaximunHealth;
 
             // Update the health point.
-            if (m_PlayerHUD == null) Debug.Log(">?");
-
             m_PlayerHUD.GetHealthBar.UpdateHealthBar(MaximunHealth, CurrentHealth);
 
             // Display weapon info UI and health bar after respawn.
