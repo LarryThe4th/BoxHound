@@ -45,6 +45,8 @@ namespace BoxHound
         private PlayerHUDUI m_PlayerHUD;
 
         private RespawnCountDown m_RespawnCountDown;
+
+        private InGameMessageUI m_InGameMessageUI;
         #endregion
 
         #region Public variables
@@ -127,6 +129,16 @@ namespace BoxHound
                 if (!m_RespawnCountDown && photonView.isMine)
                     m_RespawnCountDown = UIframework.UIManager.Instance.GetUI<RespawnCountDown>(UIframework.UIManager.SceneUIs.RespawnCountDownUI);
                 return m_RespawnCountDown;
+            }
+        }
+
+        public InGameMessageUI GetInGameMessage
+        {
+            get
+            {
+                if (!m_InGameMessageUI && photonView.isMine)
+                    m_InGameMessageUI = UIframework.UIManager.Instance.GetUI<InGameMessageUI>(UIframework.UIManager.SceneUIs.InGameMessageUI);
+                return m_InGameMessageUI;
             }
         }
         #endregion
@@ -242,9 +254,9 @@ namespace BoxHound
         [PunRPC]
         private void OnEliminatedEnemy(PhotonMessageInfo info)
         {
-            if (m_PlayerHUD == null) return;
             // Play kill confirm animation
-            m_PlayerHUD.GetKillComfirmation.PlayKillConfirmAnimation();
+            LocalPlayer.GetPlayerHUD.GetKillComfirmation.PlayKillConfirmAnimation();
+            PhotonNetwork.player.AddScore(100);
         }
 
         [PunRPC]
@@ -322,8 +334,6 @@ namespace BoxHound
 
                     GetCountDown.ShowRespawnCountDown(source.sender.name,
                         m_WeaponManager.GetWeaponByIndex(weaponIndex).GetWeaponName);
-                    // Add score.
-                    source.sender.AddScore(100);
 
                     this.photonView.RPC("OnDead", PhotonTargets.All, source.sender.name);
 

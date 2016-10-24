@@ -63,6 +63,10 @@ namespace BoxHound {
             Weap_OutOfAmmo,
             Resp_RespawningInSce,
             Resp_MurderWeaponText,
+            Igms_KillMessage,
+            Igms_LeftMessage,
+            Igms_JoinMessage,
+            Igms_Middel,
         }
 
         public static string TimeUnit {

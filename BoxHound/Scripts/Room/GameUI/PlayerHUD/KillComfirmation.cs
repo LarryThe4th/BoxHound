@@ -8,7 +8,9 @@ namespace BoxHound
     {
         #region Private variables
         // -------------- Public variable -------------
+        [SerializeField]
         private Animation m_Animation;
+        [SerializeField]
         private AudioSource m_AudioSource;
         #endregion
 
@@ -18,7 +20,6 @@ namespace BoxHound
         }
 
         public void PlayKillConfirmAnimation() {
-            Debug.Log("Kill!");
             m_Animation.Play();
             m_AudioSource.pitch = UnityEngine.Random.Range(.8f, 1.2f);
             m_AudioSource.Play();

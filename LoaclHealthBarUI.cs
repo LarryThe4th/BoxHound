@@ -41,9 +41,6 @@ namespace BoxHound.UI {
         public void UpdateHealthBar(int maximunHealth, int currentHealthPoint)
         {
             m_HealthBarPointText.text = currentHealthPoint <= 0 ? "0" : currentHealthPoint.ToString();
-
-            Debug.Log(m_HealthBarPointText.text);
-
             m_HealthBarTopSprite.fillAmount = (float)currentHealthPoint / maximunHealth;
         }
     }

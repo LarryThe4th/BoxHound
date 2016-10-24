@@ -64,6 +64,7 @@ namespace BoxHound.UIframework {
             PlayerHUDUI,
             DamageHUDUI,
             RespawnCountDownUI,
+            InGameMessageUI,
         }
         #endregion
 

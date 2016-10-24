@@ -128,7 +128,7 @@ namespace BoxHound {
             UIManager.Instance.LoadUI(UIManager.SceneUIs.GameOpeningUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.PlayerHUDUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.RespawnCountDownUI);
-
+            UIManager.Instance.LoadUI(UIManager.SceneUIs.InGameMessageUI);
             // LeaderBorad
         }
 
@@ -211,6 +211,7 @@ namespace BoxHound {
             }
 
         }
+
         public void ProcessGamePhase(GamePhase currentPhase)
         {
             CurrentPhase = currentPhase;

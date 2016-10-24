@@ -32,7 +32,7 @@ namespace BoxHound
         /// Set how long can one round last.
         /// </summary>
         public static readonly int[] AvaliableTimeLimitOptions = new int[] {
-            1, 2, 5, 8, 10 };
+            3, 5, 8, 10 };
 
         /// <summary>
         /// Convert the team ID/index to the team enum.

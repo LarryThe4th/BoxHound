@@ -52,3 +52,7 @@ Weap_ReloadingText,Reloading,填装中,装填中
 Weap_OutOfAmmo,OutOfAmmo,弹药耗尽,弾キレ
 Resp_RespawningInSce,Respawning in,你被干掉了,やられました
 Resp_MurderWeaponText,Using a,使用了,武器は
+Igms_KillMessage,down,击杀了,仕留めた！
+Igms_LeftMessage,Has left,离开了房间,は退室しました。
+Igms_JoinMessage,Joined in,加入了房间,は入室しました。
+Igms_Middel,put,把,は
