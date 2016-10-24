@@ -1,0 +1,8 @@
+ID,EN,JP,CN
+Note,,,
+DefaultValue,,,
+MainMenu,MainMenu,メインメニュー,主菜单界面
+RoomBrowser,RoomBrowser,ルーム一覧,游戏房间列表
+CreateRoom,CreateRoom,ルームを作る,创建游戏房间
+InGame,InGame,ゲーム内容,游戏相关
+CharacterControl, CharacterControl,キャラ操作,游戏人物操作

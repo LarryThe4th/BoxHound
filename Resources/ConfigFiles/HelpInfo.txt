@@ -1,0 +1,7 @@
+ID,EN,JP,CN
+Note,,,
+Default,Editing,編集中,编辑中
+Main_NickNameHeader,Player nickname,ニックネーム,玩家别名
+Main_NickNameInfo,Nickname in bwteen 1 to 18 characters after login you can change your nickname in the "Loadout" page in Lobby.,文字数制限は1文字以上、18文字以内になります。またニックネームは「ロードアウト」ページにでいつでも変更できます。,用户别名字数限制在1到18之间。游戏登录后任何时候都可以在“装备”界面修改用户别名。
+Main_LoginButtonHeader,Login button,ログインボタン,登录按钮
+Main_LoginButtonInfo,Login button only enable when the user nick name is not empty.,入力したニックネームは有効であれば、ログインボタンの色は緑に変わります、押せばサーバーに接続し始めます。, 如果用户输入的别名是有效的话，登录按钮会变为绿色。按下登录按钮开始连接到服务器。
