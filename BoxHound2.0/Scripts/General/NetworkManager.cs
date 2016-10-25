@@ -123,9 +123,6 @@ namespace BoxHound {
         public override void OnFailedToConnectToPhoton(DisconnectCause cause)
         {
             base.OnFailedToConnectToPhoton(cause);
-
-            //OnReportClientConnectionState("<color=red>エラー</color> サーバーに接続できませんでした\n" +
-            //    "原因: <color=yellow>" + cause.ToString() + "</color>", true);
         }
 
         /// <summary>
@@ -143,8 +140,7 @@ namespace BoxHound {
         {
             base.OnJoinedLobby();
             // Load lobby scene when joined lobby.
-            BoxHound.LoadSceneManager.Instance.LoadSceneWithTransition(LoadSceneManager.Scenes.Lobby);
-            // MessageBroadCastManager.OnJoinLobby();
+            LoadingScreenManager.LoadScene( LoadingScreenManager.TargetScene.Lobby);
         }
 
         /// <summary>
@@ -165,7 +161,7 @@ namespace BoxHound {
             base.OnCreatedRoom();
             if (PhotonNetwork.isMasterClient && (m_MapIndexWhenCreateRoom >= 0 && m_MapIndexWhenCreateRoom <= GameMapManager.GetMapCount))
             {
-                PhotonNetwork.LoadLevel(GameMapManager.GetGameMap(m_MapIndexWhenCreateRoom).GameMapSceneName);
+                PhotonNetwork.LoadLevel(GameMapManager.GetGameMap(m_MapIndexWhenCreateRoom).GameMapSceneIndex);
                 m_MapIndexWhenCreateRoom = -1;
             }
         }
@@ -203,7 +199,6 @@ namespace BoxHound {
             // but now we can only hope ...
             // if (PlayerConnected != null) PlayerConnected(newPlayer);
             MessageBroadCastManager.OnPlayerJoinRoom(newPlayer);
-
         }
 
         public override void OnPhotonPlayerDisconnected(PhotonPlayer otherPlayer)

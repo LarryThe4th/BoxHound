@@ -15,6 +15,7 @@ namespace BoxHound {
             TimeUnit = 0,
             TimeLeft,
             TimesUp,
+            RoundEnd,
             Main_NickNameInputFieldTip,
             Main_LoginButtonText,
             Menu_SettingsButtonText,
@@ -78,6 +79,11 @@ namespace BoxHound {
         }
 
         public static string TimesUp
+        {
+            get; private set;
+        }
+
+        public static string RoundEnd
         {
             get; private set;
         }

@@ -17,7 +17,7 @@ namespace BoxHound.UI {
         private Text m_LanguageSettingHeader;
         [SerializeField]
         private Dropdown m_LanguageSetting;
-        private int m_LanguageIndex = 0;
+        // private int m_LanguageIndex = 0;
 
         [SerializeField]
         private Text m_SettingsWindowHeader;
@@ -65,7 +65,7 @@ namespace BoxHound.UI {
                 m_LanguageSetting.value = 0;
 
                 // Set default values.
-                m_LanguageIndex = 0;
+                // m_LanguageIndex = 0;
 
                 // Add event listener to the drop down menu.
                 m_LanguageSetting.onValueChanged.AddListener((value) => OnSelectedLanguage(value));
@@ -76,7 +76,7 @@ namespace BoxHound.UI {
         }
 
         private void OnSelectedLanguage(int index) {
-            m_LanguageIndex = index;
+            // m_LanguageIndex = index;
         }
 
         private void OnClickedSaveButton() {

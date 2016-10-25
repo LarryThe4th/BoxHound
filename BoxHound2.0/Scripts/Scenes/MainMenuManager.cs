@@ -12,7 +12,6 @@ namespace BoxHound {
             UIManager.Instance.LoadUI(UIManager.SceneUIs.HelperWindowUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.SettingsWindowUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.ExitGameDialogUI);
-            UIManager.Instance.LoadUI(UIManager.SceneUIs.LoadingScreenUI);
         }
     }
 }

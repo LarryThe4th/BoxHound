@@ -54,7 +54,6 @@ namespace BoxHound.UIframework {
             LobbyMenu,
             ExitGameDialogUI,
             ExitMenu,
-            LoadingScreenUI,
             LobbyNavigationBarUI,
             RoomBrowserUI,
             CreateRoomUI,
@@ -65,6 +64,9 @@ namespace BoxHound.UIframework {
             DamageHUDUI,
             RespawnCountDownUI,
             InGameMessageUI,
+            LeaderBoardUI,
+            SingleColumnListUI,
+            DoubleColumnListUI,
         }
         #endregion
 
@@ -106,7 +108,7 @@ namespace BoxHound.UIframework {
         private int m_AboveBlurEffectUIDisplayCount = 0;
 
         // Temp.
-        private static bool m_DisableUserInput = false;
+        // private static bool m_DisableUserInput = false;
         // ------------------------------------------------------
         #endregion
 
@@ -394,11 +396,19 @@ namespace BoxHound.UIframework {
 
         public void EnableUISceneCamera(bool enable) {
             SceneCamera.gameObject.SetActive(enable);
-            // UnderBlur.worldCamera = 
         }
 
-        public void ResetUnderBlurCanvasRenderCamera(Camera camera) {
-            UnderBlurCanvas.worldCamera = camera;
+        /// <summary>
+        /// Reset the canvas's render camera. 
+        /// Left the paraemter as NULL will set to the scene camera under UIManager.
+        /// </summary>
+        /// <param name="camera"></param>
+        public void ResetUnderBlurCanvasRenderCamera(Camera camera = null) {
+            if (camera == null) {
+                UnderBlurCanvas.worldCamera = SceneCamera;
+                EnableUISceneCamera(true);
+            } 
+            else UnderBlurCanvas.worldCamera = camera;
         }
 
         //private void OnSceneInitFinised() {

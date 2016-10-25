@@ -4,6 +4,7 @@ DefaultValue,Default,默认,デフォルト
 TimeUnit,MIN,分钟,分
 TimeLeft,TimeLeft,剩余时间,残り時間
 TimesUp,Time's up,时间到,タイムアップ
+RoundEnd,Round end,结果发布,結果発表
 Main_NickNameInputFieldTip,Enter your nickname,请输入您的昵称,ニックネームを入力してください
 Main_LoginButtonText,Login,登录,ログイン
 Menu_SettingsButtonText,Settings,游戏设置,ゲーム設定

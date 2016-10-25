@@ -18,8 +18,8 @@ namespace BoxHound.UI
         }
 
         [Header("Game UIs")]
-        public LeaderBoard leaderBoard;  // The Leader borad UI.
-        public GameOpening GameOpeningUI;  // The Game opening UI.
+        public LeaderBoardUI leaderBoard;  // The Leader borad UI.
+        // public GameOpening GameOpeningUI;  // The Game opening UI.
         public PlayerHUD PlayerHUDUI;      // The player head-up display UI.
         public MessageCenter MessageCenterUI; // The room message center UI.
 
@@ -40,8 +40,8 @@ namespace BoxHound.UI
         {
             if (!m_AllInited) return;
             if (m_StopUIProcess) return;
-            // Update game opening UI.
-            GameOpeningUI.Process();
+            //// Update game opening UI.
+            //GameOpeningUI.Process();
             GameUIControl();
         }
 
@@ -56,14 +56,14 @@ namespace BoxHound.UI
         {
             if (m_StopUIProcess) return;
 
-            if (Input.GetKey(KeyCode.Tab) && RoomManager.CurrentPhase == RoomManager.GamePhase.RunningGame)
-            {
-                leaderBoard.DisplayUI(true);
-            }
-            else
-            {
-                leaderBoard.DisplayUI(false);
-            }
+            //if (Input.GetKey(KeyCode.Tab) && RoomManager.CurrentPhase == RoomManager.GamePhase.RunningGame)
+            //{
+            //    leaderBoard.DisplayUI(true);
+            //}
+            //else
+            //{
+            //    leaderBoard.DisplayUI(false);
+            //}
 
             //if (Input.GetKeyDown(KeyCode.Escape))
             //{
@@ -81,9 +81,9 @@ namespace BoxHound.UI
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 // If current game progress is in the Preparation phase.
-                if (RoomManager.CurrentPhase == RoomManager.GamePhase.Preparation) {
-                    GameOpeningUI.OnClickStart();
-                }
+                //if (RoomManager.CurrentPhase == RoomManager.GamePhase.Preparation) {
+                //    GameOpeningUI.OnClickStart();
+                //}
             }
         }
         #endregion
@@ -102,11 +102,11 @@ namespace BoxHound.UI
             Instance = this;
             Properties = new UIProperties(UIframework.UIManager.SceneUIs.GameRoomUI, UIframework.UIManager.DisplayUIMode.NeverHide, UIframework.UIManager.UITypes.UnderBlurEffect, false, true);
 
-            leaderBoard = GetComponentInChildren<LeaderBoard>();
-            leaderBoard.Init(RoomManager.CurrentGameMode.IsUsingTeamRule());
+            leaderBoard = GetComponentInChildren<LeaderBoardUI>();
+            // leaderBoard.Init(GameRoomManager.CurrentGameMode.IsUsingTeamRule());
 
-            GameOpeningUI = GetComponentInChildren<GameOpening>();
-            GameOpeningUI.Init(RoomManager.CurrentGameMode.IsUsingTeamRule());
+            //GameOpeningUI = GetComponentInChildren<GameOpening>();
+            //GameOpeningUI.Init(RoomManager.CurrentGameMode.IsUsingTeamRule());
 
 
             PlayerHUDUI = GetComponentInChildren<PlayerHUD>();

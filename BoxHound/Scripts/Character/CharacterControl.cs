@@ -194,8 +194,6 @@ namespace BoxHound
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir * Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);
-
-            m_CharacterCamera.UpdateCursorLock();
         }
 
         private void PlayJumpSound()

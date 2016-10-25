@@ -21,9 +21,9 @@ namespace BoxHound {
 
         private void Start() {
             // If current is not connected to the server, return to the main menu.
-            if (!NetworkManager.IsConnectedToServer && !LoadSceneManager.Instance.IsMainScene)
+            if (!NetworkManager.IsConnectedToServer && !LoadingScreenManager.IsMainScene)
             {
-                LoadSceneManager.Instance.LoadSceneDirectly(LoadSceneManager.Scenes.Main);
+                LoadingScreenManager.LoadScene(LoadingScreenManager.TargetScene.Main);
                 return;
             }
 

@@ -49,6 +49,15 @@ namespace BoxHound {
         {
             Instance = this;
 
+            ProcessLoaclGamePhase(GamePhase.InitializeGame);
+            // After finished all initiaztion, Show the Preparation UI.
+            // let the player choise a team or wait until round starts.
+            // Call through the UI manager can have a blur effect on the back.
+            UIManager.Instance.ShowUI(UIManager.SceneUIs.GameOpeningUI);
+        }
+
+        private void InitializeNewGame()
+        {
             // Disable the UI hotkeys for now...
             // There must be a better way to do this.
             BoxHound.UI.GameMenuUI.EnbaleHotKey = false;
@@ -74,10 +83,7 @@ namespace BoxHound {
             // start a new round.
             CurrentGameMode.StartNewRound(PhotonNetwork.room);
 
-            // After finished all initiaztion, Show the Preparation UI.
-            // let the player choise a team or wait until round starts.
-            // Call through the UI manager can have a blur effect on the back.
-            UIManager.Instance.ShowUI(UIManager.SceneUIs.GameOpeningUI);
+            ProcessLoaclGamePhase(GamePhase.Preparation);
         }
 
         private void InitAllAvailableGameMode()
@@ -129,7 +135,7 @@ namespace BoxHound {
             UIManager.Instance.LoadUI(UIManager.SceneUIs.PlayerHUDUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.RespawnCountDownUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.InGameMessageUI);
-            // LeaderBorad
+            UIManager.Instance.LoadUI(UIManager.SceneUIs.LeaderBoardUI);
         }
 
         // Instantiate local player character game object.
@@ -166,7 +172,10 @@ namespace BoxHound {
 
         private void OnPlayerStartGame() {
             BoxHound.UI.GameMenuUI.EnbaleHotKey = true;
+            // Respawn play when round start.
             CharacterManager.LocalPlayer.Respawn();
+            // Now the game start runing.
+            CurrentPhase = GamePhase.RunningGame;
         }
 
         /// <summary>
@@ -195,6 +204,63 @@ namespace BoxHound {
             }
         }
 
+        private void Update()
+        {
+            if (CurrentPhase == GamePhase.RunningGame ||
+                CurrentPhase == GamePhase.Preparation)
+            {
+                // See if round finished.
+                if (CurrentGameMode.IsRoundFinished())
+                {
+                    ProcessLoaclGamePhase(GamePhase.RoundEnded);
+                }
+            }
+            if (CurrentPhase == GamePhase.ToNextRound)
+            {
+                CurrentGameMode.ToNextRound();
+            }
+        }
+
+        public void ProcessLoaclGamePhase(GamePhase currentPhase)
+        {
+            CurrentPhase = currentPhase;
+            switch (currentPhase)
+            {
+                case GamePhase.InitializeGame:
+                    InitializeNewGame();
+                    break;
+                case GamePhase.Preparation:
+                    // After finished all initiaztion, Show the Preparation UI.
+                    // let the player choise a team or wait until round starts.
+                    // Call through the UI manager can have a blur effect on the back.
+                    UIManager.Instance.ShowUI(UIManager.SceneUIs.GameOpeningUI);
+                    break;
+                case GamePhase.RoundStart:
+                    // Empty
+                    break;
+                case GamePhase.RunningGame:
+                    // Empty
+                    break;
+                case GamePhase.RoundEnded:
+                    EnableSceneCamera(true);
+
+                    CharacterManager.LocalPlayer.EnableMainCamera(false);
+                    CharacterManager.LocalPlayer.EnableCharacterControl(false);
+                    CharacterManager.LocalPlayer.EnableWeaponContorl(false);
+
+                    // Hide the health bar and weapon info
+                    CharacterManager.LocalPlayer.GetPlayerHUD.ShowIngameInfo(false);
+
+                    // Show leader board.
+                    UIManager.Instance.ShowUI(UIManager.SceneUIs.LeaderBoardUI);
+
+                    CurrentPhase = GamePhase.ToNextRound;
+                    break;
+                case GamePhase.ToNextRound:
+                    break;
+            }
+        }
+
         protected override void EventRegister(bool reigist)
         {
             base.EventRegister(reigist);
@@ -210,26 +276,6 @@ namespace BoxHound {
                 MessageBroadCastManager.GamePauseEvent -= OnGamePause;
             }
 
-        }
-
-        public void ProcessGamePhase(GamePhase currentPhase)
-        {
-            CurrentPhase = currentPhase;
-            switch (currentPhase)
-            {
-                case GamePhase.InitializeGame:
-                    break;
-                case GamePhase.Preparation:
-                    break;
-                case GamePhase.RoundStart:
-                    break;
-                case GamePhase.RunningGame:
-                    break;
-                case GamePhase.RoundEnded:
-                    break;
-                case GamePhase.ToNextRound:
-                    break;
-            }
         }
     }
 }

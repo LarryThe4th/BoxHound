@@ -233,17 +233,7 @@ namespace BoxHound
             // Receive data
             else
             {
-                float oldHealth = CurrentHealth;
                 CurrentHealth = (int)stream.ReceiveNext();
-
-                //// If the health has not changed since last data recived, 
-                //// no need to update it.
-                //if (CurrentHealth != oldHealth)
-                //{
-                //    //Debug.Log("Here");
-                //    //if (photonView.isMine)
-                //    //    OnHealthChanged(new PhotonMessageInfo(PhotonNetwork.player, (int)PhotonNetwork.time, photonView));
-                //}
             }
         }
 

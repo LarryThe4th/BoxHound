@@ -232,7 +232,7 @@ namespace BoxHound
 
                 // Reload the next round scene
                 // PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().buildIndex);
-                PhotonNetwork.LoadLevel(GameMapManager.GetGameMap(nextMap).GameMapSceneName);
+                PhotonNetwork.LoadLevel(GameMapManager.GetGameMap(nextMap).GameMapSceneIndex);
             }
         }
         #endregion

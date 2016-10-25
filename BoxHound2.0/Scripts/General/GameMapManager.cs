@@ -7,14 +7,17 @@ namespace BoxHound
         public class GameMap {
             public string GameMapName { get; set; }
             public string GameMapSceneName { get; private set; }
+            public int GameMapSceneIndex { get; private set; }
             public Sprite GameMapPreviewImage { get; private set; }
 
-            public GameMap(string name, string sceneName, string mapPreviewImageName) {
+            public GameMap(string name, string sceneName, int sceneIndex, string mapPreviewImageName) {
                 GameMapName = name;
                 // I tried to use SceneManager.GetSceneByName by what ever name i pass into it, it always
                 // returns a vaild scene, it seems like it's a bug since unity 5.3.
                 // As for now, just make sure the scene name is correctly typed in.
                 GameMapSceneName = sceneName;
+
+                GameMapSceneIndex = sceneIndex;
 
                 GameMapPreviewImage = Resources.Load("MapPreview/" + mapPreviewImageName, typeof(Sprite)) as Sprite;
             }
@@ -24,8 +27,8 @@ namespace BoxHound
         /// The list stores all the map information.
         /// </summary>
         private static List<GameMap> m_GameMapList = new List<GameMap>() {
-            new GameMap("倉庫訓練所", "BoxWorld", "BoxWorldPreview"),
-            new GameMap("対立世界", "Lab", "FacingWorldsPreview")
+            new GameMap("ボックスワールド", "BoxWorld", 2,  "BoxWorldPreview"),
+            new GameMap("対立世界", "VirualTournament", 4, "FacingWorldsPreview")
         };
 
         /// <summary>

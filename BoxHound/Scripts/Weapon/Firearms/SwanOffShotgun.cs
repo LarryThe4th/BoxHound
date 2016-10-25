@@ -18,16 +18,16 @@ namespace BoxHound
             [Tooltip("The Sawed-off shotgun barrel.")]
             public MeshRenderer Barrel;
 
-            public MeshRenderer NewRoundRight;
-            public MeshRenderer NewRoundLeft;
+            public MeshRenderer NewRoundRight = null;
+            public MeshRenderer NewRoundLeft = null;
 
-            public MeshRenderer AmmoInRightBarrel;
-            public MeshRenderer AmmoInLeftBarrel;
+            public MeshRenderer AmmoInRightBarrel = null;
+            public MeshRenderer AmmoInLeftBarrel = null;
 
             [Header("Particle System")]
             // Particle system
-            public ParticleSystem SmokeParticles;
-            public ParticleSystem SparkParticles;
+            public ParticleSystem SmokeParticles = null;
+            public ParticleSystem SparkParticles = null;
         }
 
         [System.Serializable]

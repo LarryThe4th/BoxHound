@@ -208,7 +208,7 @@ public class bl_HudDamageManager : MonoBehaviour {
     /// </summary>
     public void Restart()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        // Application.LoadLevel(Application.loadedLevel);
     }
 
     public float BloodFadeSpeed 

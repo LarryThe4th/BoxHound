@@ -85,6 +85,7 @@ namespace BoxHound.UI {
         private void OnClickedExitRoom()
         {
             // TODO: need confirmation
+            UIframework.UIManager.Instance.ResetUnderBlurCanvasRenderCamera();
             NetworkManager.Instance.LeaveRoom();
         }
 
@@ -93,7 +94,7 @@ namespace BoxHound.UI {
             base.ShowUI();
 
             // Exit room button will only display when in room.
-            m_ExitRoomButton.gameObject.SetActive(LoadSceneManager.Instance.IsInGame);
+            m_ExitRoomButton.gameObject.SetActive(LoadingScreenManager.IsInGame);
 
             m_Animator.SetBool(m_AnimatorParameterKey, true);
         }
@@ -101,7 +102,6 @@ namespace BoxHound.UI {
         public override void HideUI()
         {
             base.HideUI();
-
 
             m_Animator.SetBool(m_AnimatorParameterKey, false);
         }

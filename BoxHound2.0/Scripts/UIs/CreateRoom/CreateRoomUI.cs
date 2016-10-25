@@ -71,14 +71,7 @@ namespace BoxHound.UI {
         // The health limit for every player pre life.
         private int m_HealthLimit = 0;
 
-        // Flag
-        private bool m_CreatingRoom = false;
-
         private readonly string m_AnimationParameterKeyword = "ShowPage";
-
-        private string m_CreatingRoomText = "";
-        private string m_NeedANameForCreateNewRoom = "";
-        private string m_SameNameExistWarning = "";
         #endregion
 
         #region Private methods
@@ -93,11 +86,11 @@ namespace BoxHound.UI {
 
             if (CreateRoomButton.interactable)
             {
-                CreateRoomButtonText.text = "ルームを作成し入室する";
+                CreateRoomButtonText.text = GameLanguageManager.GetText(GameLanguageManager.KeyWord.CreR_CreateRoomConfirm, GameLanguageManager.CurrentLanguage);
             }
             else
             {
-                CreateRoomButtonText.text = "ルーム名を設定してください";
+                CreateRoomButtonText.text = GameLanguageManager.GetText(GameLanguageManager.KeyWord.CreR_NeedAName, GameLanguageManager.CurrentLanguage); 
             }
 
             // Store user input.
@@ -264,8 +257,7 @@ namespace BoxHound.UI {
             {
                 if (string.Compare(room.name, m_RoomName) == 0)
                 {
-                    //DialogBase.OnCallDialog(DialogBase.Dialogs.CreatingOrJoiningRoom, true, new string[] { "ルームを作成中、しばらくお待ちください" });
-                    //NetWorkManager.OnReportClientConnectionState("入力したルーム名と同じ名前のルームが存在します、名前をかぶらないよう再設定してください", true);
+
                     // Reset room name input.
                     m_RoomName = "";
                     return false;
@@ -306,9 +298,6 @@ namespace BoxHound.UI {
 
             // The health limit for every player pre life.
             m_HealthLimit = 0;
-
-            // Flag
-            m_CreatingRoom = false;
             #endregion
 
             #region Room name

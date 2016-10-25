@@ -63,7 +63,7 @@ namespace BoxHound.UI {
             int secondsLeft = Mathf.FloorToInt((float)timeLeft) % 60;
 
             if (minutesLeft <= 0 && secondsLeft <= 0) {
-                GameRoomManager.Instance.ProcessGamePhase(GameRoomManager.GamePhase.RoundEnded);
+                GameRoomManager.Instance.ProcessLoaclGamePhase(GameRoomManager.GamePhase.RoundEnded);
                 UIManager.Instance.HideUI(this);
             }
 

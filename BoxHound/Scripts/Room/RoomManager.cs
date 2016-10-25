@@ -237,10 +237,9 @@ namespace BoxHound
             Cursor.lockState = CursorLockMode.Confined;
             // Show the game opening menu,
             // let the player choise a team or wait until round starts.
-            GameRoomUI.Instance.GameOpeningUI.DisplayUI(true);
+            // GameRoomUI.Instance.GameOpeningUI.DisplayUI(true);
         }
         #endregion
-
         private void StartRound()
         {
             // Respwan player to the spwan point.

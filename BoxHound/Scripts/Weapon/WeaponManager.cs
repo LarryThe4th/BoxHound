@@ -39,7 +39,7 @@ namespace BoxHound {
         // The transform location of where the weapon will be holded.
         private Transform WeaponHolderOnRight;
 
-        private WeaponType defualtWeaponType = WeaponType.WaltherPPK;
+        // private WeaponType defualtWeaponType = WeaponType.WaltherPPK;
 
         // The list of all available weapons in the game.
         private List<Weapon> m_WeaponList    

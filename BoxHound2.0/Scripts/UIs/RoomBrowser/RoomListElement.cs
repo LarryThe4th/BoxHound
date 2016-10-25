@@ -80,6 +80,7 @@ namespace BoxHound.UI
 
         public void EnableDisplay(bool enable)
         {
+            if (this == null) { return; }
             this.gameObject.SetActive(enable);
         }
     }

@@ -190,8 +190,6 @@ namespace BoxHound.UI
 
         public void OnClickedJoinRoomButton()
         {
-            //SoundManager.Instance.PlayUISFX(SoundManager.UISFX.MenuConfirm);
-            //// DialogBase.OnCallDialog(DialogBase.Dialogs.CreatingOrJoiningRoom, true, "入室中、しばらくお待ちください");
             NetworkManager.Instance.JoinRoom(SelectedRoomName);
             m_JoinRoomButton.interactable = false;
         }

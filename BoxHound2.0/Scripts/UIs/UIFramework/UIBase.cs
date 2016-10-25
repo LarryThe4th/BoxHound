@@ -77,7 +77,7 @@ namespace BoxHound.UI {
         /// Is this UI currently displaying on the screen?
         /// </summary>
         public bool IsDisplaying {
-            get; private set;
+            get; set;
         }
         #endregion
 

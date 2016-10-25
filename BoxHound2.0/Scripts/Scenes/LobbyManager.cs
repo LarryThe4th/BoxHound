@@ -27,12 +27,10 @@ namespace BoxHound
             UIManager.Instance.LoadUI(UIManager.SceneUIs.HelperWindowUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.SettingsWindowUI);
             UIManager.Instance.LoadUI(UIManager.SceneUIs.ExitGameDialogUI);
-            UIManager.Instance.LoadUI(UIManager.SceneUIs.LoadingScreenUI);
 
 
             // Set room browser as the default page.
             MessageBroadCastManager.OnNavigationButtonClicked(LobbyPageCategory.RoomBrowser);
-
         }
 
         protected override void EventRegister(bool reigist)

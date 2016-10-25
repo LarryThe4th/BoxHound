@@ -15,7 +15,6 @@ namespace BoxHound.UI {
         private Animator m_Animator;
         private readonly string m_AnimationParameterKeyword = "ShowPage";
 
-        private bool m_ShowingRoomPreview = false;
         private int m_LastUpdateRoomCount = 0;
         #endregion
 
@@ -38,8 +37,6 @@ namespace BoxHound.UI {
                 UIframework.UIManager.UITypes.UnderBlurEffect,
                 false, true);
 
-            // Wont show the room preview until init finished.
-            m_ShowingRoomPreview = false;
             // Keep track the room count everytime the room list update.
             m_LastUpdateRoomCount = 0;
 
@@ -98,6 +95,8 @@ namespace BoxHound.UI {
         /// </summary>
         private void UpdateRoomListAndPerview()
         {
+            
+
             // No need to update the room list when it is not displaying or not connected to the server.
             if (!IsDisplaying || !NetworkManager.IsConnectedToServer) return;
 
@@ -128,8 +127,6 @@ namespace BoxHound.UI {
             // If we have available room at this moment...
             if (HasAvailableRoom)
             {
-                Debug.Log("Has room count: " + PhotonNetwork.GetRoomList().Length);
-
                 m_NoRoomAvailablePopupWindow.PullBack();
 
                 // First check if the room still exist after the update.
